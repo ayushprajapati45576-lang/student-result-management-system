@@ -30,6 +30,7 @@ route.get("/viewClass/:id",authMiddleware,ClassController.getClassById);
 route.put("/updateClass/:id", authMiddleware,ClassController.updateClass);
 route.delete("/deleteClass/:id",authMiddleware,ClassController.deleteClass);
 
+
 // admin  only Subject add
 route.post("/add-subject",authMiddleware,SubjectController.addSubject);
 route.get("/subjects",authMiddleware,SubjectController.getAllSubjects);
