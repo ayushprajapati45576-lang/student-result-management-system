@@ -1,0 +1,43 @@
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+
+export const classApi = createApi({
+  reducerPath: "classApi",
+  baseQuery: fetchBaseQuery({
+    baseUrl: "http://localhost:3000/api",
+    credentials: "include", 
+  }),
+  tagTypes: ["Class"],
+
+  endpoints: (builder) => ({
+    // ✅ Create Class
+    addClass: builder.mutation({
+      query: (data) => ({
+        url: "/addClass",
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["Class"],
+    }),
+
+    // ✅ Get All Classes
+    getClasses: builder.query({
+      query: () => "/allClass",
+      providesTags: ["Class"],
+    }),
+
+    // ✅ Delete Class
+    deleteClass: builder.mutation({
+      query: (id) => ({
+        url: `/classes/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Class"],
+    }),
+  }),
+});
+
+export const {
+  useAddClassMutation,
+  useGetClassesQuery,
+  useDeleteClassMutation,
+} = classApi;
