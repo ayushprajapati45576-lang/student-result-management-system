@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const subjectSchema = new mongoose.Schema({
     class: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "class",
+        ref: "Class",   
         required: true
     },
     name: {
@@ -20,6 +20,7 @@ const subjectSchema = new mongoose.Schema({
     }
 }, { timestamps: true });
 
+// unique subject code per class
 subjectSchema.index({ class: 1, code: 1 }, { unique: true });
 
 module.exports = mongoose.model("Subject", subjectSchema);

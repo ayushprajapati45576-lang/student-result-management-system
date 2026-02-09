@@ -1,7 +1,7 @@
 import {
   useGetClassesQuery,
   useDeleteClassMutation,
-} from "../../../features/class/classApi";
+} from "../../../features/class/classApi"; 
 import { toast } from "react-toastify";
 
 const ManageClasses = () => { 

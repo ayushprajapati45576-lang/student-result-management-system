@@ -10,13 +10,14 @@ import ProtectedRoute from './routes/ProtectedRoute'
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+
 import CreateClass from './pages/admin/class/CreateClass'
 import ManageClasses from './pages/admin/class/ManageClasses'
 import CreateSubject from './pages/admin/subject/CreateSubject'
+import ManageSubjects from './pages/admin/subject/ManageSubject'
 
 function App() {
   return (
-
     <>
       <Routes>
 
@@ -48,10 +49,6 @@ function App() {
           }
         />
 
-
-
-
-
         {/* admin routes */}
         <Route element={<ProtectedRoute role="admin" />}>
           <Route
@@ -81,7 +78,6 @@ function App() {
             }
           />
 
-
           <Route
             path="/admin/subjects/create"
             element={
@@ -91,18 +87,18 @@ function App() {
             }
           />
 
+          ✅ {/* FIX HERE */}
+          <Route
+            path="/admin/subjects/manage"
+            element={
+              <AdminLayout>
+                <ManageSubjects />
+              </AdminLayout>
+            }
+          />
 
         </Route>
-
-
-
-
-
-
       </Routes>
-
-
-
 
       {/* 🔔 Toast Alerts */}
       <ToastContainer
@@ -111,7 +107,6 @@ function App() {
         newestOnTop
         theme="colored"
       />
-
     </>
   )
 }
