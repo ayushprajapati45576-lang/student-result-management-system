@@ -13,10 +13,10 @@ const app = express();
 app.use(express.json());
 app.use(cookieParser());
 
-// ✅ CORS FIX (IMPORTANT for cookies in production)
+// ✅ FIXED CORS
 app.use(
   cors({
-    origin: "https://srm-t1x9.vercel.app", // frontend URL
+    origin: "https://srm-t1x9.vercel.app",
     credentials: true,
   })
 );
