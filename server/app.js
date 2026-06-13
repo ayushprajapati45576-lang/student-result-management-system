@@ -13,13 +13,16 @@ const app = express();
 app.use(express.json());
 app.use(cookieParser());
 
+// ✅ CORS FIX (IMPORTANT for cookies in production)
 app.use(
   cors({
-    // origin: "http://localhost:5173",
-    origin: "https://srm-t1x9.vercel.app",
+    origin: "https://srm-t1x9.vercel.app", // frontend URL
     credentials: true,
   })
 );
+
+// ✅ OPTIONAL but recommended (helps proxies like Vercel/Render)
+app.set("trust proxy", 1);
 
 connectDB();
 
