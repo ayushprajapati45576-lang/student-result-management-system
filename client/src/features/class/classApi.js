@@ -3,7 +3,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 export const classApi = createApi({
   reducerPath: "classApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://srm-khaki-eight.vercel.app/api",
+    baseUrl: "https://srm-khaki-eight.vercel.app/api",
     credentials: "include",
   }),
   tagTypes: ["Class"],
