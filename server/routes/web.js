@@ -74,7 +74,7 @@ const SubjectController = require('../controllers/SubjectController');
 const ResultController = require('../controllers/ResultController');
 
 // Middleware
-const authMiddleware = require('../middleware/authMiddleware');
+const authMiddleware = require('../Middleware/authmiddleware');
 
 
 // ===================== AUTH ROUTES =====================
