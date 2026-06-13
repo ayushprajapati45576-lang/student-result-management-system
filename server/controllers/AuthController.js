@@ -3,7 +3,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
 
-class UserController {
+class AuthController {
 
   // REGISTER
   static register = async (req, res) => {
@@ -146,4 +146,4 @@ class UserController {
   };
 }
 
-module.exports = UserController;
+module.exports = AuthController;
