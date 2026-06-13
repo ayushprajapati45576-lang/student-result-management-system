@@ -14,7 +14,7 @@ const MyResult = () => {
     const percentage = ((total / max) * 100).toFixed(2);
 
     return (
-        <div className="max-w-5xl mx-auto mt-10">
+        <div className="max-w-5xl mx-auto mt-24">
 
             <h1 className="text-3xl font-bold text-center mb-6">
                 🎓 Student Result
@@ -81,3 +81,7 @@ const MyResult = () => {
 };
 
 export default MyResult;
+
+
+
+
