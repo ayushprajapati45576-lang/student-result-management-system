@@ -30,7 +30,7 @@ import AdminResultList from "./pages/admin/result/AdminResult";
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import MyResult from "./pages/myresult";
+import MyResult from "./pages/MyResult";
 
 function App() {
   return (
