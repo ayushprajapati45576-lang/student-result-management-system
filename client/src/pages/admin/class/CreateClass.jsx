@@ -39,10 +39,11 @@ const CreateClass = () => {
           className="w-full border px-4 py-2 rounded"
         >
           <option value="">Select Course</option>
-          <option value="BTECH">BTECH</option>
-          <option value="BCA">BCA</option>
-          <option value="MBA">MBA</option>
-          <option value="BBA">BBA</option>
+          <option value="8">8</option>
+          <option value="9">9</option>
+          <option value="10">10</option>
+          <option value="11">11</option>
+          <option value="12">12</option>
         </select>
 
         {/* Semester */}
