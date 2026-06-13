@@ -4,7 +4,7 @@ const classSchema = new mongoose.Schema(
   {
     course: {
       type: String,
-      enum: ["BTECH", "BCA", "MBA", "BBA" , "10" , "12"],
+      enum: ["10" , "12"],
       required: true
     },
     semester: {
