@@ -148,8 +148,6 @@
 
 // module.exports = AuthController;
 
-
-
 const UserModel = require("../models/user");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
@@ -186,9 +184,7 @@ class AuthController {
 
     } catch (error) {
       console.log(error);
-      return res.status(500).json({
-        message: error.message
-      });
+      return res.status(500).json({ message: error.message });
     }
   };
 
@@ -219,11 +215,12 @@ class AuthController {
         { expiresIn: "1d" }
       );
 
-      // ✅ COOKIE FIX (Vercel + Mobile safe)
+      // 🔥 FIXED COOKIE (MOBILE + VERCEL SAFE)
       res.cookie("token", token, {
         httpOnly: true,
         secure: true,
         sameSite: "none",
+        path: "/",
         maxAge: 24 * 60 * 60 * 1000
       });
 
@@ -239,19 +236,18 @@ class AuthController {
 
     } catch (error) {
       console.log(error);
-      return res.status(500).json({
-        message: error.message
-      });
+      return res.status(500).json({ message: error.message });
     }
   };
 
   // ================= LOGOUT =================
-  static logout = (req, res) => {
+  static logout = async (req, res) => {
     try {
       res.clearCookie("token", {
         httpOnly: true,
         secure: true,
-        sameSite: "none"
+        sameSite: "none",
+        path: "/"
       });
 
       return res.status(200).json({
@@ -260,48 +256,7 @@ class AuthController {
 
     } catch (error) {
       console.log(error);
-      return res.status(500).json({
-        message: error.message
-      });
-    }
-  };
-
-  // ================= CHANGE PASSWORD =================
-  static changePassword = async (req, res) => {
-    try {
-      const { oldPassword, newPassword } = req.body;
-      const userId = req.user?.id;
-
-      if (!userId) {
-        return res.status(401).json({ message: "Unauthorized" });
-      }
-
-      const user = await UserModel.findById(userId);
-
-      if (!user) {
-        return res.status(404).json({ message: "User not found" });
-      }
-
-      const isMatch = await bcrypt.compare(oldPassword, user.password);
-
-      if (!isMatch) {
-        return res.status(401).json({ message: "Invalid old password" });
-      }
-
-      const hashedNew = await bcrypt.hash(newPassword, 10);
-
-      user.password = hashedNew;
-      await user.save();
-
-      return res.status(200).json({
-        message: "Password changed successfully"
-      });
-
-    } catch (error) {
-      console.log(error);
-      return res.status(500).json({
-        message: error.message
-      });
+      return res.status(500).json({ message: error.message });
     }
   };
 
@@ -324,9 +279,7 @@ class AuthController {
 
     } catch (error) {
       console.log(error);
-      return res.status(500).json({
-        message: error.message
-      });
+      return res.status(500).json({ message: error.message });
     }
   };
 }
