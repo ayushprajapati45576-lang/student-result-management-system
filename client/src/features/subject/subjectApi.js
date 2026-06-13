@@ -3,11 +3,11 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 export const subjectApi = createApi({
   reducerPath: "subjectApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:3000/api",
+    baseUrl: "http://srm-khaki-eight.vercel.app/api",
     credentials: "include",
   }),
   tagTypes: ["Subject"],
- 
+
   endpoints: (builder) => ({
     // ✅ ADD
     addSubject: builder.mutation({
@@ -51,7 +51,7 @@ export const {
   useGetSubjectsQuery,
   useUpdateSubjectMutation,
   useDeleteSubjectMutation,
-} = subjectApi; 
+} = subjectApi;
 
 
 

@@ -5,14 +5,14 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 export const authApi = createApi({
   reducerPath: "authApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:3000/api",
+    baseUrl: "http://srm-khaki-eight.vercel.app/api",
     credentials: "include" // 👈 COOKIE JWT 
   }),
   endpoints: (builder) => ({
     login: builder.mutation({
       query: (data) => ({
         url: "/login",
-        method: "POST", 
+        method: "POST",
         body: data
       })
     }),

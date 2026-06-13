@@ -3,7 +3,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 export const resultApi = createApi({
   reducerPath: "resultApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:3000/api",
+    baseUrl: "http://srm-khaki-eight.vercel.app/api",
     credentials: "include"
   }),
   tagTypes: ["Result"],
@@ -32,4 +32,4 @@ export const resultApi = createApi({
   })
 });
 
-export const { useAddBulkResultMutation, useGetResultsQuery,useGetMyResultQuery } = resultApi;
+export const { useAddBulkResultMutation, useGetResultsQuery, useGetMyResultQuery } = resultApi;
