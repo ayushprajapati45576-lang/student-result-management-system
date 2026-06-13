@@ -16,7 +16,7 @@ app.use(cookieParser());
 app.use(
   cors({
     // origin: "http://localhost:5173",
-    origin: "https://srm-t1x9-p4snnrh6i-ayushprajapati45576-gmailcoms-projects.vercel.app",
+    origin: "https://srm-t1x9.vercel.app",
     credentials: true,
   })
 );
