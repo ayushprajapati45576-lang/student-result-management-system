@@ -2,170 +2,152 @@ const Student = require("../models/student");
 const User = require("../models/user");
 const Class = require("../models/class");
 const bcrypt = require("bcrypt");
-
 const {
-    addStudentValidation,
-    updateStudentValidation
+  addStudentValidation,
+  updateStudentValidation
 } = require("../validations/studentValidation");
 
 class StudentController {
 
-    // ➕ ADD STUDENT
-    static addstudent = async (req, res) => {
-        try {
-            const { error } = addStudentValidation.validate(req.body);
-            if (error) {
-                return res.status(400).json({ message: error.details[0].message });
-            }
+  // ================= ADD STUDENT =================
+  static addstudent = async (req, res) => {
+    try {
+    //   console.log(req.body)
+      const { error } = addStudentValidation.validate(req.body);
+      if (error)
+        return res.status(400).json({ message: error.details[0].message });
 
-            const { name, rollNo, classId, year, password, email } = req.body;
+      const { name, rollNo, classId, year, password, email } = req.body;
 
-            // roll no duplicate
-            if (await Student.findOne({ rollNo })) {
-                return res.status(400).json({ message: "Roll number already exists" });
-            }
+      // duplicate roll
+      if (await Student.findOne({ rollNo }))
+        return res.status(400).json({ message: "Roll number already exists" });
 
-            // ✅ CLASS EXIST CHECK (FIXED)
-            const classExist = await Class.findById(classId);
-            if (!classExist) {
-                return res.status(400).json({ message: "Class not found" });
-            }
+      // class check
+      if (!await Class.findById(classId))
+        return res.status(404).json({ message: "Class not found" });
 
-            const studentEmail = email || `${rollNo}@college.com`;
+      const studentEmail = email || `${rollNo}@college.com`;
 
-            // email duplicate
-            if (await User.findOne({ email: studentEmail })) {
-                return res.status(400).json({ message: "Email already exists" });
-            }
+      if (await User.findOne({ email: studentEmail }))
+        return res.status(400).json({ message: "Email already exists" });
 
-            const hashedPassword = await bcrypt.hash(password, 10);
+      const hashedPassword = await bcrypt.hash(password, 10);
 
-            // create user
-            const user = await User.create({
-                name,
-                email: studentEmail,
-                password: hashedPassword,
-                role: "student"
-            });
+      // create user
+      const user = await User.create({
+        name,
+        email: studentEmail,
+        password: hashedPassword,
+        // role: "student"
+      });
 
-            // create student
-            const student = await Student.create({
-                user: user._id,
-                rollNo,
-                class: classId,
-                year
-            });
+      // create student
+      const student = await Student.create({
+        user: user._id,
+        rollNo,
+        class: classId,
+        year
+      });
 
-            res.status(201).json({
-                message: "Student added successfully",
-                student
-            });
+      res.status(201).json({
+        message: "Student added successfully",
+        student
+      });
 
-        } catch (error) {
-            console.error(error);
-            res.status(500).json({ message: "Server error" });
-        }
-    };
+    } catch (err) {
+      console.log(err)
+      res.status(500).json({ message: "Server error" });
+    }
+  };
 
-    // 📋 GET ALL STUDENTS
-    static getAllStudents = async (req, res) => {
-        try {
-            const students = await Student.find()
-                .populate("user", "name email")
-                .populate("class", "course semester"); // ✅ CORRECT
+  // ================= GET ALL STUDENTS =================
+  static getAllStudents = async (req, res) => {
+    const students = await Student.find()
+      .populate("user", "name email")
+      .populate("class", "course semester");
 
-            res.status(200).json(students);
-        } catch (error) {
-            console.error(error);
-            res.status(500).json({ message: "Server error" });
-        }
-    };
+    res.status(200).json(students);
+  };
 
-    // 👁️ GET SINGLE STUDENT BY ID
-    static getStudentById = async (req, res) => {
+  // ================= GET STUDENT BY ID =================
+  static getStudentById = async (req, res) => {
+    const student = await Student.findById(req.params.id)
+      .populate("user", "name email")
+      .populate("class", "course semester");
 
-        const student = await Student.findById(req.params.id)
-            .populate("user", "name email")
-            .populate("class", "course semester");
+    if (!student)
+      return res.status(404).json({ message: "Student not found" });
 
-        if (!student)
-            return res.status(404).json({ message: "Student not found" });
+    res.status(200).json(student);
+  };
 
+  // ================= UPDATE STUDENT =================
+  static updateStudent = async (req, res) => {
+    try {
+      console.log(req.body)
+      const { error } = updateStudentValidation.validate(req.body);
+      if (error)
+        return res.status(400).json({ message: error.details[0].message });
 
-        res.status(200).json(student);
+      const student = await Student.findById(req.params.id);
+      if (!student)
+        return res.status(404).json({ message: "Student not found" });
 
-    };
+      const user = await User.findById(student.user);
 
-    // ✏️ UPDATE STUDENT
-    static updateStudent = async (req, res) => {
-        try {
-            const { error } = updateStudentValidation.validate(req.body);
-            if (error) {
-                return res.status(400).json({ message: error.details[0].message });
-            }
+      const { name, rollNo, classId, year, password, email } = req.body;
 
-            // const { id } = req.params;
+      // name update
+      if (name) user.name = name;
 
+      // rollNo update
+      if (rollNo && rollNo !== student.rollNo) {
+        if (await Student.findOne({ rollNo }))
+          return res.status(400).json({ message: "Roll number already exists" });
 
-            const student = await Student.findById(req.params.id);
-            if (!student)
-                return res.status(404).json({ message: "Student not found" });
+        student.rollNo = rollNo;
 
+        // auto email update if manual email not provided
+        user.email = email || `${rollNo}@college.com`;
+      }
 
-            const user = await User.findById(student.user);
+      // manual email update
+      if (email && email !== user.email) {
+        if (await User.findOne({ email }))
+          return res.status(400).json({ message: "Email already exists" });
 
-            const { name, email, password, classId, year } = req.body;
+        user.email = email;
+      }
 
-            // if (!user) {
-            //     return res.status(404).json({ message: "User not found" });
-            // }
+      if (password)
+        user.password = await bcrypt.hash(password, 10);
 
-            if (name) user.name = name;
+      if (classId) student.class = classId;
+      if (year) student.year = year;
 
-            if (email && email !== user.email) {
-                if (await User.findOne({ email })) {
-                    return res.status(400).json({ message: "Email already exists" });
-                }
-                user.email = email;
-            }
+      await user.save();
+      await student.save();
 
-            if (password) {
-                user.password = await bcrypt.hash(password, 10);
-            }
+      res.status(200).json({ message: "Student updated successfully" });
 
-            await user.save();
+    } catch (err) {
+      console.log(err);
+      res.status(500).json({ message: "Server error" });
+    }
+  };
 
-            if (year) student.year = year;
+  // ================= DELETE STUDENT =================
+  static deleteStudent = async (req, res) => {
+    const student = await Student.findById(req.params.id);
+    if (!student)
+      return res.status(404).json({ message: "Student not found" });
 
+    await User.findByIdAndDelete(student.user);
+    await Student.findByIdAndDelete(req.params.id);
 
-            await student.save();
-
-            res.status(200).json({
-                message: "Student updated successfully"
-            });
-
-        } catch (error) {
-            // console.error(error);
-            res.status(500).json({ message: "Server error" });
-        }
-    };
-
-    // 🗑️ DELETE STUDENT
-    static deleteStudent = async (req, res) => {
-
-
-
-        const student = await Student.findById(req.params.id);
-        if (!student)
-            return res.status(404).json({ message: "Student not found" });
-
-        await User.findByIdAndDelete(student.user);
-        await Student.findByIdAndDelete(req.params.id);
-
-        res.status(200).json({ message: "Student deleted successfully" });
-    };
-};
-    
-
+    res.status(200).json({ message: "Student deleted successfully" });
+  };
+}
 
 module.exports = StudentController;

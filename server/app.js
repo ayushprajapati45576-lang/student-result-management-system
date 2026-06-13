@@ -1,36 +1,35 @@
 const express = require("express");
 const dotenv = require("dotenv");
+const cookieParser = require("cookie-parser");
+const cors = require("cors");
+
 const web = require("./routes/web");
-const connectDB = require("./db/connectDB")
-const cookieParser = require('cookie-parser')
-const cors = require("cors")
+const connectDB = require("./db/connectDB");
 
-
-dotenv.config(); // ✅ sabse upar
+dotenv.config();
 
 const app = express();
-app.use(cookieParser())
 
-// cors fix(cookies jwt k liye)
+app.use(express.json());
+app.use(cookieParser());
+
 app.use(
   cors({
-    origin:"http://localhost:5173",  //react url
-    credentials:true  //allow cookies 
+    origin: "http://localhost:5173",
+    credentials: true,
   })
 );
 
-// middleware 
-app.use(express.json());
-
-// database connect
 connectDB();
 
-// routes localhost 3000
+app.get("/", (req, res) => {
+  res.send("API Running");
+});
+
 app.use("/api", web);
 
-// server
 const PORT = process.env.PORT || 3000;
+
 app.listen(PORT, () => {
-  console.log(`server start localhost: ${PORT}`);
+  console.log(`Server running on ${PORT}`);
 });
-                                      

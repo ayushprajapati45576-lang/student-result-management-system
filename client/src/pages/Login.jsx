@@ -1,19 +1,25 @@
-// import { useLoginMutation } from "../features/auth/authApi";
+import { useLoginMutation } from "../features/auth/authApi";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify"
 
-const Login = () => { 
-  // const [login] = useLoginMutation(); 
+const Login = () => {
+  const [login] = useLoginMutation();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      await login({ email, password }).unwrap();
-      alert("Logged in successfully!");
-      // Redirect or do something after login
+      const res = await login({ email, password }).unwrap();
+      if (res.user.role === "student") {
+        toast.success("Student login successful ✅");
+        navigate("/student/result");
+      }
+
     } catch (error) {
-      alert("Login failed. Please check credentials.");
+      toast.error("Invalid credentials ❌");
     }
   };
 
@@ -21,7 +27,7 @@ const Login = () => {
     <div className="min-h-screen bg-gray-100 flex items-center justify-center px-4">
       <div className="bg-white shadow-lg rounded-lg w-full max-w-md p-8">
         <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">
-          Admin Login
+          Student Login
         </h2>
 
         <form onSubmit={handleLogin} className="space-y-4">
@@ -70,3 +76,10 @@ const Login = () => {
 };
 
 export default Login;
+
+
+
+
+
+
+

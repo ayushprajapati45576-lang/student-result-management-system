@@ -1,125 +1,233 @@
 import { NavLink } from "react-router-dom";
-import { useState } from "react";
-import { ChevronRight, ChevronsLeft } from "lucide-react";
+import { useState, useEffect } from "react";
+import { ChevronRight, ChevronsLeft, X } from "lucide-react";
 
-const Sidebar = ({ open, setOpen, collapsed, setCollapsed }) => {
+const Sidebar = ({ open, setOpen }) => {
+  const [collapsed, setCollapsed] = useState(false);
   const [classOpen, setClassOpen] = useState(false);
   const [subjectOpen, setSubjectOpen] = useState(false);
+  const [studentOpen, setStudentOpen] = useState(false);
+  const [resultOpen, setResultOpen] = useState(false); // ✅ NEW
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 768) {
+        setOpen(true);
+      } else {
+        setOpen(false);
+        setCollapsed(false);
+      }
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, [setOpen]);
 
   const closeSidebar = () => {
     if (window.innerWidth < 768) setOpen(false);
   };
 
   return (
-    <aside
-      className={`
-        fixed md:static top-0 left-0 z-50
-        h-screen bg-gradient-to-b from-[#0f172a] to-[#020617]
-        text-white transition-all duration-300
-        ${open ? "translate-x-0" : "-translate-x-full"}
-        md:translate-x-0
-        ${collapsed ? "w-20" : "w-64"}
-      `}
-    >
-      {/* Logo */}
-      <div className="flex items-center justify-between px-4 py-4 border-b border-white/10">
-        {!collapsed && <span className="font-bold">SRMS | Admin</span>}
-        <button
-          onClick={() => setCollapsed(!collapsed)}
-          className="hidden md:block"
-        >
-          <ChevronsLeft
-            className={`transition-transform ${
-              collapsed ? "rotate-180" : ""
-            }`}
-          />
-        </button>
-      </div>
+    <>
+      {/* Mobile Overlay */}
+      {open && window.innerWidth < 768 && (
+        <div
+          className="fixed inset-0 bg-black/50 z-40"
+          onClick={() => setOpen(false)}
+        />
+      )}
 
-      <nav className="p-3 space-y-1">
+      <aside
+        className={`
+          bg-gradient-to-b from-[#0f172a] to-[#020617] text-white
+          transition-all duration-300
+          ${open ? "translate-x-0" : "-translate-x-full"} 
+          fixed top-0 left-0 z-50 h-screen
+          md:relative md:translate-x-0
+          ${collapsed ? "w-20" : "w-64"}
+        `}
+      >
+        {/* Logo */}
+        <div className="flex items-center justify-between px-4 py-4 border-b border-white/10">
+          {!collapsed && <span className="font-bold">SRMS | Admin</span>}
 
-        <NavLink onClick={closeSidebar} to="/admin/dashboard" className="menu">
-          📊 {!collapsed && "Dashboard"}
-        </NavLink>
-
-        {/* ===== Student Classes Dropdown ===== */}
-        <button
-          onClick={() => setClassOpen(!classOpen)}
-          className="menu w-full flex justify-between items-center"
-        >
-          <span>🏫 {!collapsed && "Student Classes"}</span>
-          {!collapsed && (
-            <ChevronRight
-              className={`transition ${classOpen ? "rotate-90" : ""}`}
-            />
-          )}
-        </button>
-
-        {classOpen && !collapsed && (
-          <div className="ml-6 space-y-1">
-            <NavLink
-              onClick={closeSidebar}
-              to="/admin/classes/add"
-              className="submenu"
+          <div className="flex items-center space-x-2">
+            <button
+              onClick={() => setCollapsed(!collapsed)}
+              className="hidden md:block"
             >
-              ➕ Create Class
-            </NavLink>
-            <NavLink
-              onClick={closeSidebar}
-              to="/admin/classes/manage"
-              className="submenu"
-            >
-              📋 Manage Classes
-            </NavLink>
+              <ChevronsLeft
+                className={`transition-transform ${
+                  collapsed ? "rotate-180" : ""
+                }`}
+              />
+            </button>
+
+            {window.innerWidth < 768 && (
+              <button onClick={() => setOpen(false)}>
+                <X />
+              </button>
+            )}
           </div>
-        )}
+        </div>
 
-        {/* ===== Subject Dropdown ===== */}
-        <button
-          onClick={() => setSubjectOpen(!subjectOpen)}
-          className="menu w-full flex justify-between items-center"
-        >
-          <span>📚 {!collapsed && "Subjects"}</span>
-          {!collapsed && (
-            <ChevronRight
-              className={`transition ${subjectOpen ? "rotate-90" : ""}`}
-            />
+        {/* Navigation */}
+        <nav className="p-3 space-y-1">
+          <NavLink
+            onClick={closeSidebar}
+            to="/admin/dashboard"
+            className="menu"
+          >
+            📊 {!collapsed && "Dashboard"}
+          </NavLink>
+
+          {/* Classes */}
+          <button
+            onClick={() => setClassOpen(!classOpen)}
+            className="menu w-full flex justify-between items-center"
+          >
+            <span>🏫 {!collapsed && "Student Classes"}</span>
+            {!collapsed && (
+              <ChevronRight
+                className={`transition ${
+                  classOpen ? "rotate-90" : ""
+                }`}
+              />
+            )}
+          </button>
+
+          {classOpen && !collapsed && (
+            <div className="ml-6 space-y-1">
+              <NavLink
+                onClick={closeSidebar}
+                to="/admin/classes/add"
+                className="submenu"
+              >
+                ➕ Create Class
+              </NavLink>
+              <NavLink
+                onClick={closeSidebar}
+                to="/admin/classes/manage"
+                className="submenu"
+              >
+                📋 Manage Classes
+              </NavLink>
+            </div>
           )}
-        </button>
 
-        {subjectOpen && !collapsed && (
-          <div className="ml-6 space-y-1">
-            <NavLink
-              onClick={closeSidebar}
-              to="/admin/subjects/create"
-              className="submenu"
-            >
-              ➕ Create Subject
-            </NavLink>
-            <NavLink
-              onClick={closeSidebar}
-              to="/admin/subjects/manage"
-              className="submenu"
-            >
-              📋 Manage Subjects
-            </NavLink>
-          </div>
-        )}
+          {/* Subjects */}
+          <button
+            onClick={() => setSubjectOpen(!subjectOpen)}
+            className="menu w-full flex justify-between items-center"
+          >
+            <span>📚 {!collapsed && "Subjects"}</span>
+            {!collapsed && (
+              <ChevronRight
+                className={`transition ${
+                  subjectOpen ? "rotate-90" : ""
+                }`}
+              />
+            )}
+          </button>
 
-        <NavLink onClick={closeSidebar} to="/admin/students" className="menu">
-          👨‍🎓 {!collapsed && "Students"}
-        </NavLink>
+          {subjectOpen && !collapsed && (
+            <div className="ml-6 space-y-1">
+              <NavLink
+                onClick={closeSidebar}
+                to="/admin/subjects/create"
+                className="submenu"
+              >
+                ➕ Create Subject
+              </NavLink>
+              <NavLink
+                onClick={closeSidebar}
+                to="/admin/subjects/manage"
+                className="submenu"
+              >
+                📋 Manage Subjects
+              </NavLink>
+            </div>
+          )}
 
-        <NavLink onClick={closeSidebar} to="/admin/results" className="menu">
-          📝 {!collapsed && "Results"}
-        </NavLink>
+          {/* Students */}
+          <button
+            onClick={() => setStudentOpen(!studentOpen)}
+            className="menu w-full flex justify-between items-center"
+          >
+            <span>👨‍🎓 {!collapsed && "Students"}</span>
+            {!collapsed && (
+              <ChevronRight
+                className={`transition ${
+                  studentOpen ? "rotate-90" : ""
+                }`}
+              />
+            )}
+          </button>
 
-        <NavLink onClick={closeSidebar} to="/admin/notices" className="menu">
-          📢 {!collapsed && "Notices"}
-        </NavLink>
+          {studentOpen && !collapsed && (
+            <div className="ml-6 space-y-1">
+              <NavLink
+                onClick={closeSidebar}
+                to="/admin/students/add"
+                className="submenu"
+              >
+                ➕ Add Student
+              </NavLink>
+              <NavLink
+                onClick={closeSidebar}
+                to="/admin/students/manage"
+                className="submenu"
+              >
+                📋 Manage Students
+              </NavLink>
+            </div>
+          )}
 
-      </nav>
-    </aside>
+          {/* ✅ Results Dropdown (NEW) */}
+          <button
+            onClick={() => setResultOpen(!resultOpen)}
+            className="menu w-full flex justify-between items-center"
+          >
+            <span>📝 {!collapsed && "Results"}</span>
+            {!collapsed && (
+              <ChevronRight
+                className={`transition ${
+                  resultOpen ? "rotate-90" : ""
+                }`}
+              />
+            )}
+          </button>
+
+          {resultOpen && !collapsed && (
+            <div className="ml-6 space-y-1">
+              <NavLink
+                onClick={closeSidebar}
+                to="/admin/results/add"
+                className="submenu"
+              >
+                ➕ Add Result
+              </NavLink>
+              <NavLink
+                onClick={closeSidebar}
+                to="/admin/results/manage"
+                className="submenu"
+              >
+                📋 Manage Results
+              </NavLink>
+            </div>
+          )}
+
+          {/* Notices */}
+          <NavLink
+            onClick={closeSidebar}
+            to="/admin/notices"
+            className="menu"
+          >
+            📢 {!collapsed && "Notices"}
+          </NavLink>
+        </nav>
+      </aside>
+    </>
   );
 };
 
