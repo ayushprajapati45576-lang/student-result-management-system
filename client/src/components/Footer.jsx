@@ -5,15 +5,17 @@ const Footer = () => {
 
         {/* 1. About */}
         <div>
-          <h3 className="text-lg font-bold mb-3">About PNINFOSYS</h3>
+          <h3 className="text-lg font-bold mb-3">ABOUT AP COACHING CLASSES</h3>
           <p className="text-gray-400 text-sm">
-            PNINFOSYS is an IT company providing educational solutions and
-            development workshops. Our Student Result System helps students
-            check results, download marksheets, and more.
+            At Anil Sir’s AP Coaching Classes, we are committed to delivering quality
+            mathematics education through structured learning, concept clarity,
+            and student-focused guidance. Our Student Result System enables
+            students to easily access academic results, download marksheets,
+            and track their performance efficiently.
           </p>
         </div>
 
-        {/* 2. Quick Links */} 
+        {/* 2. Quick Links */}
         <div>
           <h3 className="text-lg font-bold mb-3">Quick Links</h3>
           <ul className="space-y-2 text-gray-400 text-sm">
@@ -29,8 +31,8 @@ const Footer = () => {
           <h3 className="text-lg font-bold mb-3">Contact Info</h3>
           <ul className="space-y-2 text-gray-400 text-sm">
             <li>📍 Gwalior, Madhya Pradesh</li>
-            <li>📞 +91 7000846823</li>
-            <li>✉️ info@pninfosys.com</li>
+            <li>📞 +91 9294862917</li>
+            <li>✉️ ayushprajapati45576@gmail.com </li>
           </ul>
         </div>
 
@@ -49,7 +51,7 @@ const Footer = () => {
 
       {/* Footer Bottom */}
       <div className="border-t border-gray-700 mt-6 py-4 text-center text-gray-400 text-sm">
-        © {new Date().getFullYear()} PNINFOSYS | Student Result System. All rights reserved.
+        © {new Date().getFullYear()} AP COACHING CLASSES | Student Result System. All rights reserved.
       </div>
     </footer>
   );

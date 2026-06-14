@@ -27,6 +27,7 @@ const MyResult = () => {
 
                 <p><b>Roll No:</b> {student?.rollNo}</p>
 
+                {/* <p><b>Class:</b> {student?.class?.name}</p> */}
                 <p><b>Class:</b> {student?.class?.course}</p>
 
                 <p><b>Semester:</b> {results[0]?.semester}</p>
