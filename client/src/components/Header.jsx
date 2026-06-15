@@ -52,7 +52,7 @@ const Header = () => {
             Home
           </Link>
           <Link
-            to="/student-login"
+            to="/login"
             className="block hover:text-yellow-300 transition-colors"
             onClick={() => setIsOpen(false)}
           >
