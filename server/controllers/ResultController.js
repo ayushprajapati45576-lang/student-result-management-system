@@ -643,5 +643,5 @@ class ResultController {
   };
 }
 
-module.exports = ResultController;
+module.exports = ResultController ;
 
