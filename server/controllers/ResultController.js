@@ -633,6 +633,46 @@ class ResultController {
       });
     }
   };
+
+  // ================= UPDATE RESULT =================
+  static updateResult = async (req, res) => {
+    try {
+      const { marksObtained } = req.body;
+      if (marksObtained === undefined || typeof marksObtained !== "number" || marksObtained < 0) {
+        return res.status(400).json({ message: "Invalid marks" });
+      }
+
+      const result = await Result.findById(req.params.id).populate("subject", "maxMarks");
+      if (!result) {
+        return res.status(404).json({ message: "Result not found" });
+      }
+
+      result.marksObtained = marksObtained;
+
+      // Recalculate percentage
+      const percentage = Number(((marksObtained / result.subject.maxMarks) * 100).toFixed(2));
+      result.percentage = percentage;
+
+      // Recalculate grade
+      let grade = "F";
+      if (percentage >= 90) grade = "A+";
+      else if (percentage >= 80) grade = "A";
+      else if (percentage >= 70) grade = "B";
+      else if (percentage >= 60) grade = "C";
+      else if (percentage >= 50) grade = "D";
+      result.grade = grade;
+
+      await result.save();
+
+      res.status(200).json({
+        message: "Result updated successfully",
+        result
+      });
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ message: "Server error" });
+    }
+  };
 }
 
 module.exports = ResultController ;

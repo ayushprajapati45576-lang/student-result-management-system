@@ -88,6 +88,17 @@ export const resultApi = createApi({
       invalidatesTags: ["Result"],
     }),
 
+    // ✅ UPDATE RESULT
+    updateResult: builder.mutation({
+      query: ({ id, marksObtained }) => ({
+        url: `/result/${id}`,
+        method: "PUT",
+        body: { marksObtained },
+      }),
+
+      invalidatesTags: ["Result"],
+    }),
+
   }),
 });
 
@@ -95,5 +106,6 @@ export const {
   useAddBulkResultMutation,
   useGetResultsQuery,
   useGetMyResultQuery,
-  useDeleteResultMutation, // ✅ add this
+  useDeleteResultMutation,
+  useUpdateResultMutation,
 } = resultApi;

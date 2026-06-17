@@ -212,21 +212,61 @@
 
 
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import {
   useGetResultsQuery,
   useDeleteResultMutation,
+  useUpdateResultMutation,
 } from "../../../features/result/resultApi";
 
 const AdminResultList = () => {
   const { data: results = [], isLoading, refetch } = useGetResultsQuery();
 
-  // ✅ Delete Mutation
+  // ✅ Mutations
   const [deleteResult] = useDeleteResultMutation();
+  const [updateResult, { isLoading: updatingResult }] = useUpdateResultMutation();
 
   const [search, setSearch] = useState("");
   const [filterYear, setFilterYear] = useState("");
   const [selectedResult, setSelectedResult] = useState(null);
+  const [editResult, setEditResult] = useState(null);
+  const [editMarks, setEditMarks] = useState({});
+
+  // Pre-populate marks map for editing
+  useEffect(() => {
+    if (editResult) {
+      const marksMap = {};
+      editResult.results.forEach((res) => {
+        marksMap[res._id] = res.marksObtained;
+      });
+      setEditMarks(marksMap);
+    }
+  }, [editResult]);
+
+  const handleMarkChange = (id, value) => {
+    setEditMarks((prev) => ({
+      ...prev,
+      [id]: value === "" ? "" : Number(value)
+    }));
+  };
+
+  const handleEditSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      for (const id of Object.keys(editMarks)) {
+        await updateResult({
+          id,
+          marksObtained: Number(editMarks[id]),
+        }).unwrap();
+      }
+      alert("Result Updated Successfully");
+      setEditResult(null);
+      refetch();
+    } catch (error) {
+      console.log(error);
+      alert(error?.data?.message || "Failed to update result");
+    }
+  };
 
   // ✅ Group By Student + Year
   const groupedResults = useMemo(() => {
@@ -355,6 +395,14 @@ const AdminResultList = () => {
                       View
                     </button>
 
+                    {/* EDIT BUTTON */}
+                    <button
+                      onClick={() => setEditResult(group)}
+                      className="bg-yellow-500 text-white px-4 py-1 rounded-lg hover:bg-yellow-600"
+                    >
+                      Edit
+                    </button>
+
                     {/* DELETE BUTTON */}
                     <button
                       onClick={() => handleDelete(group)}
@@ -457,6 +505,66 @@ const AdminResultList = () => {
                 Close
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* ✏️ EDIT RESULT MODAL */}
+      {editResult && (
+        <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center">
+          <div className="bg-white w-3/4 p-6 rounded-2xl shadow-2xl">
+            <h3 className="text-xl font-bold mb-4 text-center">
+              Edit Marks - {editResult.student?.user?.name}
+            </h3>
+
+            <form onSubmit={handleEditSubmit} className="space-y-4">
+              <table className="w-full border text-center mb-4">
+                <thead className="bg-gray-200">
+                  <tr>
+                    <th className="border p-2">Subject</th>
+                    <th className="border p-2">Marks Obtained</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  {editResult.results.map((res) => (
+                    <tr key={res._id}>
+                      <td className="border p-2">{res.subject?.name}</td>
+                      <td className="border p-2">
+                        <input
+                          type="number"
+                          value={editMarks[res._id] !== undefined ? editMarks[res._id] : res.marksObtained}
+                          onChange={(e) => handleMarkChange(res._id, e.target.value)}
+                          className="border p-1 w-24 text-center"
+                          required
+                          min="0"
+                          max={res.subject?.maxMarks || 100}
+                        />
+                        <span className="ml-1 text-gray-500">/ {res.totalMarks}</span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+
+              <div className="flex justify-end gap-2">
+                <button
+                  type="button"
+                  onClick={() => setEditResult(null)}
+                  className="bg-gray-500 text-white px-4 py-1 rounded-lg"
+                >
+                  Cancel
+                </button>
+
+                <button
+                  type="submit"
+                  disabled={updatingResult}
+                  className="bg-green-600 text-white px-4 py-1 rounded-lg hover:bg-green-700"
+                >
+                  {updatingResult ? "Saving..." : "Save"}
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}

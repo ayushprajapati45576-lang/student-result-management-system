@@ -74,4 +74,7 @@ route.get('/my-result', authMiddleware, ResultController.getMyResult);
 // Delete result (Admin)
 route.delete('/result/:id', authMiddleware, ResultController.deleteResult);
 
+// Update result (Admin)
+route.put('/result/:id', authMiddleware, ResultController.updateResult);
+
 module.exports = route;
