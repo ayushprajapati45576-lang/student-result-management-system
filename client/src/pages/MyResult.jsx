@@ -30,7 +30,7 @@ const MyResult = () => {
                 {/* <p><b>Class:</b> {student?.class?.name}</p> */}
                 <p><b>Class:</b> {student?.class?.course}</p>
 
-                <p><b>Semester:</b> {results[0]?.semester}</p>
+                {/* <p><b>Semester:</b> {results[0]?.semester}</p> */}
 
                 <p><b>Year:</b> {results[0]?.year}</p>
 
