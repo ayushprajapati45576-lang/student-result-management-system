@@ -27,10 +27,10 @@ const MyResult = () => {
 
                 <p><b>Roll No:</b> {student?.rollNo}</p>
 
-                {/* <p><b>Class:</b> {student?.class?.name}</p> */}
+
                 <p><b>Class:</b> {student?.class?.course}</p>
 
-                {/* <p><b>Semester:</b> {results[0]?.semester}</p> */}
+                {/* <p><b>Semester:</b> {results[0]?.semester}</p> */} 
 
                 <p><b>Year:</b> {results[0]?.year}</p>
 
@@ -46,7 +46,7 @@ const MyResult = () => {
 
                     <tr>
                         <th className="p-3">Subject</th>
-                        {/* <th className="p-3">Semester</th> */}
+                        {/* <th className="p-3">Semester</th> */} 
                         <th className="p-3">Marks</th>
                         <th className="p-3">Grade</th>
                     </tr>
@@ -61,7 +61,8 @@ const MyResult = () => {
 
                             <td className="p-3">{r.subject.name}</td>
 
-                            {/* <td>{r.semester}</td> */}
+                            {/* <td>{r.semester}</td> */} 
+
 
                             <td>{r.marksObtained}/{r.totalMarks}</td>
 

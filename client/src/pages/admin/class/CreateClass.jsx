@@ -47,7 +47,7 @@ const CreateClass = () => {
         </select>
 
         {/* Semester */}
-        <select
+        {/* <select
           value={semester}
           onChange={(e) => setSemester(e.target.value)}
           className="w-full border px-4 py-2 rounded"
@@ -58,7 +58,7 @@ const CreateClass = () => {
               Semester {sem}
             </option>
           ))}
-        </select>
+        </select> */}
 
         <button
           type="submit"
