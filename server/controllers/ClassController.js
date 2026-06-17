@@ -15,15 +15,15 @@ class ClassController {
                 return res.status(400).json({ message: error.details[0].message });
             }
 
-            const { course, semester } = req.body;
+                        const { course } = req.body;
 
-            const existClass = await Class.findOne({ course, semester });
+            const existClass = await Class.findOne({ course });
 
             if (existClass) {
                 return res.status(400).json({ message: "Class already exists" });
             }
 
-            const newClass = await Class.create({ course, semester });
+            const newClass = await Class.create({ course });
 
             res.status(201).json({
                 message: "Class added successfully",
@@ -39,7 +39,7 @@ class ClassController {
     // Get all classes
     static getAllClasses = async (req, res) => {
         try {
-            const classes = await Class.find().sort({ course: 1, semester: 1 });
+            const classes = await Class.find().sort({ course: 1 });
 
             return res.status(200).json(classes);
         } catch (error) {
@@ -69,7 +69,7 @@ class ClassController {
                 return res.status(400).json({ message: error.details[0].message });
             }
 
-            const { course, semester } = req.body;
+            const { course } = req.body;
 
             const classData = await Class.findById(req.params.id);
             if (!classData) {
@@ -77,7 +77,6 @@ class ClassController {
             }
 
             if (course) classData.course = course;
-            if (semester) classData.semester = semester;
 
             await classData.save();
 

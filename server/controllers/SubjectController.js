@@ -202,7 +202,7 @@ class SubjectController {
     static getAllSubjects = async (req, res) => {
         try {
             // ✅ Populate class with course + semester (correct spelling)
-            const subjects = await Subject.find().populate("class", "course semester");
+            const subjects = await Subject.find().populate("class", "course");
             res.status(200).json(subjects);
         } catch (error) {
             console.error(error);
@@ -216,7 +216,7 @@ class SubjectController {
             const { id } = req.params;
 
             const subject = await Subject.findById(id)
-                .populate("class", "course semester"); // ✅ spelling fixed
+                .populate("class", "course"); // ✅ spelling fixed
 
             if (!subject) {
                 return res.status(404).json({ message: "Subject not found" });
@@ -251,7 +251,7 @@ class SubjectController {
             await subject.save();
 
             // ✅ Populate class before sending back
-            const updatedSubject = await Subject.findById(id).populate("class", "course semester");
+            const updatedSubject = await Subject.findById(id).populate("class", "course");
 
             res.status(200).json({
                 message: "Subject updated successfully",
@@ -296,7 +296,7 @@ class SubjectController {
             const {classId} = req.params;
 
             // ✅ Populate class details
-            const subjects = await Subject.find({class : classId}).populate("class", "course semester");
+            const subjects = await Subject.find({class : classId}).populate("class", "course");
             res.status(200).json(subjects);
 
         } catch (error){

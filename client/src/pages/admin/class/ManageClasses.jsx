@@ -34,7 +34,6 @@ const ManageClasses = () => {
         id: editData._id,
         data: {
           course: editData.course,
-          semester: editData.semester,
         },
       }).unwrap(); // 🔥 IMPORTANT
 
@@ -57,7 +56,6 @@ const ManageClasses = () => {
           <tr>
             <th className="border p-2">#</th>
             <th className="border p-2">Course</th>
-            <th className="border p-2">Semester</th>
             <th className="border p-2">Action</th>
           </tr>
         </thead>
@@ -67,10 +65,9 @@ const ManageClasses = () => {
             <tr key={cls._id}>
               <td className="border p-2">{index + 1}</td>
               <td className="border p-2">{cls.course}</td>
-              <td className="border p-2">Sem {cls.semester}</td>
               <td className="border p-2 space-x-2">
                 <button
-                  onClick={() => setEditData(cls)}
+                   onClick={() => setEditData(cls)}
                   className="bg-blue-500 text-white px-3 py-1 rounded"
                 >
                   Edit
@@ -106,17 +103,6 @@ const ManageClasses = () => {
               }
               className="w-full border p-2 mb-3"
               placeholder="Course Name"
-              required
-            />
-
-            <input
-              type="number"
-              value={editData.semester}
-              onChange={(e) =>
-                setEditData({ ...editData, semester: e.target.value })
-              }
-              className="w-full border p-2 mb-3"
-              placeholder="Semester"
               required
             />
 

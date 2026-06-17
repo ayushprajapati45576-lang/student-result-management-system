@@ -21,16 +21,16 @@ const Home = () => {
         <div className="flex-1 overflow-hidden">
           <div className="flex whitespace-nowrap animate-marquee hover:[animation-play-state:paused]">
             <span className="mx-4 md:mx-8 text-sm md:text-base">
-              📢 Semester 5 Result Published
+              📢 Class 10 & 12 Results Published
             </span>
             <span className="mx-4 md:mx-8 text-sm md:text-base">
               📝 Exam Form Submission Till 20 Feb 2026
             </span>
             <span className="mx-4 md:mx-8 text-sm md:text-base">
-              ⚠️ Revaluation Open for BTECH & BCA
+              ⚠️ Revaluation Open for Classes 8 to 12
             </span>
             <span className="mx-4 md:mx-8 text-sm md:text-base">
-              🎓 Final Year Viva Schedule Updated
+              🎓 Practical Exam Schedule Updated
             </span>
           </div>
         </div>
@@ -48,7 +48,7 @@ const Home = () => {
           <ul className="space-y-3 md:space-y-4 text-gray-700">
             <li className="border-l-4 border-blue-500 pl-2 md:pl-3">
               <p className="font-semibold text-sm md:text-base">
-                Semester 1–6 Result Declared
+                Classes 8–12 Results Declared
               </p>
               <span className="text-xs md:text-sm text-gray-500">
                 Date: 15 Jan 2026
@@ -57,7 +57,7 @@ const Home = () => {
 
             <li className="border-l-4 border-green-500 pl-2 md:pl-3">
               <p className="font-semibold text-sm md:text-base">
-                MBA Semester 2 Exam Timetable Released
+                Annual Exam Timetable Released
               </p>
               <span className="text-xs md:text-sm text-gray-500">
                 Date: 10 Jan 2026
@@ -82,7 +82,7 @@ const Home = () => {
           </h2>
 
           <ul className="space-y-2 md:space-y-3 text-gray-700 text-sm md:text-base">
-            <li>✔ Check Semester Result</li>
+            <li>✔ Check Class Result</li>
             <li>✔ Download Marksheet</li>
             <li>✔ View Subject-wise Marks</li>
             <li>✔ Apply for Revaluation</li>

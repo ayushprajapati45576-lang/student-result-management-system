@@ -99,7 +99,7 @@ const StudentList = () => {
                             <td className="p-2">{s.rollNo}</td>
                             <td className="p-2">{s.user?.email}</td>
                             <td className="p-2">
-                                {s.class?.course} - Sem {s.class?.semester}
+                                Class {s.class?.course}
                             </td>
                             <td className="p-2">{s.year}</td>
                             <td className="p-2 flex gap-2 justify-center">
@@ -161,7 +161,7 @@ const StudentList = () => {
                                 <option value="">Select Class</option>
                                 {classes.map((cls) => (
                                     <option key={cls._id} value={cls._id}>
-                                        {cls.course} - Sem {cls.semester}
+                                        Class {cls.course}
                                     </option>
                                 ))}
                             </select>

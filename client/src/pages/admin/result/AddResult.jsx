@@ -49,9 +49,6 @@ const AddBulkResult = () => {
         try {
             const res = await addBulkResult({
                 studentId: selectedStudent._id,
-                semester:
-                    selectedStudent.class?.semester ||
-                    selectedStudent.class?.semester,
                 year: Number(year),
                 marks: marks.map((m) => ({
                     subjectId: m.subjectId,
@@ -97,21 +94,6 @@ const AddBulkResult = () => {
                         ))}
                     </select>
                 </div>
-
-                {/* 📘 Semester (Auto from class) */}
-                {selectedStudent && (
-                    <div>
-                        <label className="block mb-1 font-medium">Semester</label>
-                        <input
-                            type="text"
-                            value={
-                                selectedStudent.class?.semester || ""
-                            }
-                            readOnly
-                            className="w-full border p-2 rounded-lg bg-gray-100"
-                        />
-                    </div>
-                )}
 
                 {/* 📅 Year */}
                 <div>

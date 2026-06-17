@@ -14,11 +14,6 @@ const resultSchema = new mongoose.Schema(
       required: true
     },
 
-    semester: {
-      type: Number,
-      required: true
-    },
-
     year: {
       type: Number,
       required: true
@@ -47,10 +42,10 @@ const resultSchema = new mongoose.Schema(
 
 /**
  * 🔒 Ek student ka ek subject ka result
- * ek hi semester + year me sirf ek baar add ho
+ * ek hi year me sirf ek baar add ho
  */
 resultSchema.index(
-  { student: 1, subject: 1, semester: 1, year: 1 },
+  { student: 1, subject: 1, year: 1 },
   { unique: true }
 );
 

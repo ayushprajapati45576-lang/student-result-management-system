@@ -73,7 +73,7 @@ const ManageSubjects = () => {
             <tr key={s._id}>
               <td className="border p-2">{i + 1}</td>
               <td className="border p-2">
-                {s.class?.course} - Sem {s.class?.semester}
+                Class {s.class?.course}
               </td>
               <td className="border p-2">{s.name}</td>
               <td className="border p-2">{s.code}</td>

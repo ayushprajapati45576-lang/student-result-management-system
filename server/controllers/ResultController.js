@@ -317,11 +317,6 @@ const Joi = require("joi");
 const addBulkResultValidation = Joi.object({
   studentId: Joi.string().required(),
 
-  semester: Joi.number()
-    .min(1)
-    .max(8)
-    .required(),
-
   year: Joi.number()
     .min(2020)
     .max(2030)
@@ -361,7 +356,6 @@ class ResultController {
 
       const {
         studentId,
-        semester,
         year,
         marks,
       } = req.body;
@@ -369,7 +363,7 @@ class ResultController {
       // Find Student
       const student = await Student.findById(studentId)
         .populate("user", "name")
-        .populate("class", "course semester");
+        .populate("class", "course");
 
       if (!student) {
         return res.status(404).json({
@@ -403,7 +397,6 @@ class ResultController {
           await Result.findOne({
             student: studentId,
             subject: item.subjectId,
-            semester,
             year,
           });
 
@@ -439,7 +432,6 @@ class ResultController {
         const result = await Result.create({
           student: studentId,
           subject: item.subjectId,
-          semester,
           year,
           marksObtained: item.marksObtained,
           totalMarks: subject.maxMarks,
@@ -465,7 +457,7 @@ class ResultController {
             },
             {
               path: "class",
-              select: "course semester",
+              select: "course",
             },
           ],
         })
@@ -519,7 +511,7 @@ class ResultController {
             },
             {
               path: "class",
-              select: "course semester",
+              select: "course",
             },
           ],
         })
@@ -556,7 +548,7 @@ class ResultController {
 
         .populate(
           "class",
-          "course semester"
+          "course"
         );
 
       if (!student) {
@@ -583,7 +575,7 @@ class ResultController {
             },
             {
               path: "class",
-              select: "course semester",
+              select: "course",
             },
           ],
         });

@@ -65,7 +65,7 @@ class StudentController {
   static getAllStudents = async (req, res) => {
     const students = await Student.find()
       .populate("user", "name email")
-      .populate("class", "course semester");
+      .populate("class", "course");
 
     res.status(200).json(students);
   };
@@ -74,7 +74,7 @@ class StudentController {
   static getStudentById = async (req, res) => {
     const student = await Student.findById(req.params.id)
       .populate("user", "name email")
-      .populate("class", "course semester");
+      .populate("class", "course");
 
     if (!student)
       return res.status(404).json({ message: "Student not found" });

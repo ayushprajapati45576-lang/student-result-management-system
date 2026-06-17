@@ -239,7 +239,6 @@ const AdminResultList = () => {
         map[key] = {
           student: res.student,
           year: res.year,
-          semester: res.semester,
           results: [],
         };
       }
@@ -326,7 +325,6 @@ const AdminResultList = () => {
             <tr>
               <th className="border p-2">Student</th>
               <th className="border p-2">Roll</th>
-              <th className="border p-2">Semester</th>
               <th className="border p-2">Year</th>
               <th className="border p-2">Action</th>
             </tr>
@@ -341,10 +339,6 @@ const AdminResultList = () => {
 
                 <td className="border p-2">
                   {group.student?.rollNo}
-                </td>
-
-                <td className="border p-2">
-                  {group.semester}
                 </td>
 
                 <td className="border p-2">

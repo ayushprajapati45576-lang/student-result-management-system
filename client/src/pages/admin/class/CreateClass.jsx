@@ -4,23 +4,21 @@ import { toast } from "react-toastify";
 
 const CreateClass = () => {
   const [course, setCourse] = useState("");
-  const [semester, setSemester] = useState("");
 
   const [addClass, { isLoading }] = useAddClassMutation(); 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!course || !semester) {
-      toast.error("All fields are required");
+    if (!course) {
+      toast.error("Please select a course/class");
       return;
     }
 
     try {
-      await addClass({ course, semester: Number(semester) }).unwrap();
+      await addClass({ course }).unwrap();
       toast.success("Class created successfully 🎉");
       setCourse("");
-      setSemester("");
     } catch (err) {
       toast.error(err?.data?.message || "Class already exists");
     }
@@ -44,20 +42,6 @@ const CreateClass = () => {
           <option value="10">10</option>
           <option value="11">11</option>
           <option value="12">12</option>
-        </select>
-
-        {/* Semester */}
-        <select
-          value={semester}
-          onChange={(e) => setSemester(e.target.value)}
-          className="w-full border px-4 py-2 rounded"
-        >
-          <option value="">Select Semester</option>
-          {[1,2,3,4,5,6,7,8].map((sem) => (
-            <option key={sem} value={sem}>
-              Semester {sem}
-            </option>
-          ))}
         </select>
 
         <button

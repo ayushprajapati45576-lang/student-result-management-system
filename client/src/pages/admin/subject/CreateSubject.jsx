@@ -66,7 +66,7 @@ const CreateSubject = () => {
 
           {classes.map((cls) => (
             <option key={cls._id} value={cls._id}>
-              {cls.course} - Sem {cls.semester}
+              Class {cls.course}
             </option>
           ))}
         </select>
