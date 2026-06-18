@@ -13,7 +13,10 @@ const AdminLogin = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      await login({ email, password }).unwrap();
+      const res = await login({ email, password }).unwrap();
+      if (res.token) {
+        localStorage.setItem("token", res.token);
+      }
       toast.success("Admin login successful ✅");
       navigate("/admin/dashboard");
     } catch (error) {

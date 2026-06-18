@@ -229,6 +229,7 @@ class AuthController {
 
       return res.status(200).json({
         message: "Login successful",
+        token,
         user: {
           id: user._id,
           name: user.name,

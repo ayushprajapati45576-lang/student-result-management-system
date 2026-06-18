@@ -13,6 +13,9 @@ const Login = () => {
     e.preventDefault();
     try {
       const res = await login({ email, password }).unwrap();
+      if (res.token) {
+        localStorage.setItem("token", res.token);
+      }
       if (res.user.role === "student") {
         toast.success("Student login successful ✅");
         navigate("/student/result");

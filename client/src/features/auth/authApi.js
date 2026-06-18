@@ -6,7 +6,14 @@ export const authApi = createApi({
   reducerPath: "authApi",
   baseQuery: fetchBaseQuery({
     baseUrl: "https://srm-khaki-eight.vercel.app/api",
-    credentials: "include" // 👈 COOKIE JWT 
+    credentials: "include", // 👈 COOKIE JWT 
+    prepareHeaders: (headers) => {
+      const token = localStorage.getItem("token");
+      if (token) {
+        headers.set("authorization", `Bearer ${token}`);
+      }
+      return headers;
+    },
   }),
   endpoints: (builder) => ({
     login: builder.mutation({

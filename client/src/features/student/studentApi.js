@@ -4,7 +4,14 @@ export const studentApi = createApi({
   reducerPath: "studentApi",
   baseQuery: fetchBaseQuery({
     baseUrl: "https://srm-khaki-eight.vercel.app/api", // apna backend url
-    credentials: "include"
+    credentials: "include",
+    prepareHeaders: (headers) => {
+      const token = localStorage.getItem("token");
+      if (token) {
+        headers.set("authorization", `Bearer ${token}`);
+      }
+      return headers;
+    },
   }),
   tagTypes: ["Student"],
   endpoints: (builder) => ({

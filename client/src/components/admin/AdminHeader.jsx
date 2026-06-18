@@ -12,6 +12,7 @@ const AdminHeader = ({ setOpen }) => {
   const handleLogout = async () => {
     try {
       await logout().unwrap();
+      localStorage.removeItem("token");
       toast.success("Logout successful");
       navigate("/admin-login", { replace: true });
     } catch (error) {

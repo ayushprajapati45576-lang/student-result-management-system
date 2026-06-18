@@ -47,6 +47,13 @@ export const resultApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: "https://srm-khaki-eight.vercel.app/api",
     credentials: "include",
+    prepareHeaders: (headers) => {
+      const token = localStorage.getItem("token");
+      if (token) {
+        headers.set("authorization", `Bearer ${token}`);
+      }
+      return headers;
+    },
   }),
 
   tagTypes: ["Result"],
