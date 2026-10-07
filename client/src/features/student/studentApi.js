@@ -3,7 +3,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 export const studentApi = createApi({
   reducerPath: "studentApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:3000/api", // apna backend url
+    baseUrl: `${import.meta.env.VITE_API_URL || ""}/api`,
     credentials: "include",
     prepareHeaders: (headers) => {
       const token = localStorage.getItem("token");

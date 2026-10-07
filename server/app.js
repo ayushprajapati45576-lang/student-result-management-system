@@ -9,26 +9,36 @@ const connectDB = require("./db/connectDB");
 dotenv.config();
 
 const app = express();
+const allowedOrigins = [
+  "https://srm-t1x9.vercel.app",
+  process.env.CLIENT_URL,
+  process.env.VERCEL_URL && `https://${process.env.VERCEL_URL}`,
+  "http://localhost:5173",
+].filter(Boolean);
 
-// ✅ IMPORTANT ORDER
 app.use(cors({
-  origin: ["https://srm-t1x9.vercel.app", "http://localhost:5173"],
+  origin: allowedOrigins,
   credentials: true
 }));
 
 app.use(express.json());
 app.use(cookieParser());
 
-// ✅ Vercel / proxy fix
 app.set("trust proxy", 1);
-
-connectDB();
 
 app.get("/", (req, res) => {
   res.send("API Running");
 });
 
-app.use("/api", web);
+app.use("/api", async (req, res, next) => {
+  try {
+    await connectDB();
+    next();
+  } catch (error) {
+    console.error("MongoDB connection failed:", error.message);
+    res.status(503).json({ message: "Database unavailable" });
+  }
+}, web);
 
 // For local development
 const PORT = process.env.PORT || 3000;
