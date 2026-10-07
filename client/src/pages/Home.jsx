@@ -32,7 +32,7 @@ const Home = () => {
             animate={{ opacity: 1, y: 0 }}
             className="text-4xl md:text-6xl font-extrabold tracking-tight mb-6"
           >
-            Student Result Management
+            Student Result Portal
           </motion.h1>
           <motion.p 
             initial={{ opacity: 0, y: 20 }}
