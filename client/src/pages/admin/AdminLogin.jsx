@@ -56,9 +56,9 @@ const AdminLogin = () => {
           >
             <Lock className="text-white w-8 h-8" />
           </motion.div>
-          <h2 className="text-3xl font-extrabold text-white tracking-tight">
+          <h2 className="text-3xl font-extrabold text-slate-800 tracking-tight">
             Admin Portal
-          </h2>
+          </h2> 
           <p className="text-slate-400 mt-2 text-sm">Sign in to manage the student system</p>
         </div>
 
