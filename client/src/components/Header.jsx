@@ -23,7 +23,7 @@ const Header = () => {
   ];
 
   return (
-    <motion.header 
+    <motion.header
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ type: "spring", stiffness: 300, damping: 30 }}
@@ -37,7 +37,7 @@ const Header = () => {
             <GraduationCap className="text-white w-6 h-6" />
           </div>
           <h1 className={`text-xl font-extrabold tracking-tight transition-colors ${scrolled ? "text-slate-800" : "text-slate-800 md:text-white"}`}>
-            AP <span className="text-indigo-600">Classes</span>
+             <span className="text-indigo-600">Result Portal</span>
           </h1>
         </Link>
 
@@ -46,13 +46,13 @@ const Header = () => {
           {navLinks.map((link) => {
             const isActive = location.pathname === link.path;
             return (
-              <Link 
+              <Link
                 key={link.name}
-                to={link.path} 
+                to={link.path}
                 className={`relative flex items-center gap-2 px-5 py-2 rounded-full font-medium text-sm transition-all duration-300 ${isActive ? "text-white" : "text-slate-600 hover:text-indigo-600"}`}
               >
                 {isActive && (
-                  <motion.div 
+                  <motion.div
                     layoutId="activeTab"
                     className="absolute inset-0 bg-indigo-600 rounded-full shadow-md"
                     transition={{ type: "spring", stiffness: 400, damping: 25 }}
@@ -80,7 +80,7 @@ const Header = () => {
       {/* Mobile Menu */}
       <AnimatePresence>
         {isOpen && (
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}

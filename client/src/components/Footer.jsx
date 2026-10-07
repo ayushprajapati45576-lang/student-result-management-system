@@ -10,9 +10,9 @@ const Footer = () => {
         <div className="space-y-4">
           <div className="flex items-center gap-3 mb-4">
             <div className="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-500/20">
-              <span className="text-white font-bold text-xl">AP</span>
+              <span className="text-white font-bold text-xl">RP</span>
             </div>
-            <h3 className="text-xl font-bold text-white">Coaching Classes</h3>
+            <h3 className="text-xl font-bold text-white">Result portal </h3>
           </div>
           <p className="text-slate-400 text-sm leading-relaxed">
             Delivering quality mathematics education through structured learning, concept clarity, and student-focused guidance. Access your academic results effortlessly.
@@ -73,7 +73,7 @@ const Footer = () => {
 
       {/* Footer Bottom */}
       <div className="max-w-7xl mx-auto px-6 mt-12 pt-8 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-slate-500">
-        <p>© {new Date().getFullYear()} AP Coaching Classes. All rights reserved.</p>
+        <p>© {new Date().getFullYear()} Result Portal. All rights reserved.</p>
         <div className="flex gap-4">
           <a href="#" className="hover:text-slate-300">Privacy Policy</a>
           <a href="#" className="hover:text-slate-300">Terms of Service</a>
