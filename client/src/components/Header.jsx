@@ -4,17 +4,29 @@ import { useDispatch } from "react-redux";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, GraduationCap, ShieldCheck, Home, LogOut } from "lucide-react";
 import { toast } from "react-toastify";
-import { authApi, useLogoutMutation } from "../features/auth/authApi";
+import { authApi, useGetProfileQuery, useLogoutMutation } from "../features/auth/authApi";
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [hasToken, setHasToken] = useState(() => Boolean(localStorage.getItem("token")));
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const hasToken = Boolean(localStorage.getItem("token"));
   const [logout, { isLoading: isLoggingOut }] = useLogoutMutation();
-  const isLoggedIn = hasToken;
+  const { data: profile } = useGetProfileQuery(undefined, { skip: !hasToken });
+  const isLoggedIn = hasToken && Boolean(profile?.user);
+
+  useEffect(() => {
+    const syncTokenState = () => {
+      setHasToken(Boolean(localStorage.getItem("token")));
+    };
+
+    window.addEventListener("storage", syncTokenState);
+    syncTokenState();
+
+    return () => window.removeEventListener("storage", syncTokenState);
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
