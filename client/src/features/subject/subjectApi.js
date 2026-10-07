@@ -3,7 +3,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 export const subjectApi = createApi({
   reducerPath: "subjectApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: "https://srm-khaki-eight.vercel.app/api",
+    baseUrl: "http://localhost:3000/api",
     credentials: "include",
     prepareHeaders: (headers) => {
       const token = localStorage.getItem("token");

@@ -12,7 +12,7 @@ const app = express();
 
 // ✅ IMPORTANT ORDER
 app.use(cors({
-  origin: "https://srm-t1x9.vercel.app",
+  origin: ["https://srm-t1x9.vercel.app", "http://localhost:5173"],
   credentials: true
 }));
 
@@ -29,5 +29,13 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api", web);
+
+// For local development
+const PORT = process.env.PORT || 3000;
+if (process.env.NODE_ENV !== "production") {
+  app.listen(PORT, () => {
+    console.log(`🚀 Server running on port ${PORT}`);
+  });
+}
 
 module.exports = app;

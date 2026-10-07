@@ -15,7 +15,7 @@ class ClassController {
                 return res.status(400).json({ message: error.details[0].message });
             }
 
-                        const { course } = req.body;
+            const { course } = req.body;
 
             const existClass = await Class.findOne({ course });
 
@@ -109,7 +109,7 @@ class ClassController {
     };
 
 }
-    
+
 
 
 

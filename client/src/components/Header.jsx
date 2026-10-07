@@ -1,78 +1,114 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
- 
+import { useState, useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
+import { Menu, X, GraduationCap, ShieldCheck, Home } from "lucide-react";
+
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
- 
+  const [scrolled, setScrolled] = useState(false);
+  const location = useLocation();
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const navLinks = [
+    { name: "Home", path: "/", icon: <Home className="w-4 h-4" /> },
+    { name: "Student Login", path: "/login", icon: <GraduationCap className="w-4 h-4" /> },
+    { name: "Admin Login", path: "/admin-login", icon: <ShieldCheck className="w-4 h-4" /> }
+  ];
+
   return (
-    <header className="fixed top-0 left-0 w-full bg-blue-600 bg-opacity-95 text-white shadow-md z-50 backdrop-blur-sm">
-      <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+    <motion.header 
+      initial={{ y: -100 }}
+      animate={{ y: 0 }}
+      transition={{ type: "spring", stiffness: 300, damping: 30 }}
+      className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${scrolled ? "bg-white/80 backdrop-blur-md shadow-lg py-3" : "bg-transparent py-5"}`}
+    >
+      <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
 
         {/* Logo / Title */}
-        <h1 className="text-xl md:text-2xl font-bold">Student Result Portal</h1>
+        <Link to="/" className="flex items-center gap-3 group">
+          <div className="w-10 h-10 bg-gradient-to-tr from-indigo-600 to-purple-600 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-500/30 group-hover:scale-105 transition-transform">
+            <GraduationCap className="text-white w-6 h-6" />
+          </div>
+          <h1 className={`text-xl font-extrabold tracking-tight transition-colors ${scrolled ? "text-slate-800" : "text-slate-800 md:text-white"}`}>
+            AP <span className="text-indigo-600">Classes</span>
+          </h1>
+        </Link>
 
         {/* Desktop Menu */}
-        <nav className="hidden md:flex space-x-6 font-medium text-sm md:text-base">
-          <Link to="/" className="hover:text-yellow-300 transition-colors">Home</Link>
-          <Link to="/login" className="hover:text-yellow-300 transition-colors">
-            Student Login
-          </Link>
-          <Link to="/admin-login" className="hover:text-yellow-300 transition-colors">
-            Admin Login
-          </Link>
+        <nav className="hidden md:flex items-center space-x-2 bg-white/10 backdrop-blur-md border border-slate-200/50 rounded-full px-2 py-1.5 shadow-sm">
+          {navLinks.map((link) => {
+            const isActive = location.pathname === link.path;
+            return (
+              <Link 
+                key={link.name}
+                to={link.path} 
+                className={`relative flex items-center gap-2 px-5 py-2 rounded-full font-medium text-sm transition-all duration-300 ${isActive ? "text-white" : "text-slate-600 hover:text-indigo-600"}`}
+              >
+                {isActive && (
+                  <motion.div 
+                    layoutId="activeTab"
+                    className="absolute inset-0 bg-indigo-600 rounded-full shadow-md"
+                    transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                  />
+                )}
+                <span className="relative z-10 flex items-center gap-2">
+                  {link.icon} {link.name}
+                </span>
+              </Link>
+            )
+          })}
         </nav>
 
         {/* Mobile Hamburger */}
         <div className="md:hidden">
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="focus:outline-none"
+            className={`p-2 rounded-lg transition-colors ${scrolled ? "bg-slate-100 text-slate-800" : "bg-white/20 text-slate-800 backdrop-blur-md"}`}
           >
-            {isOpen ? (
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            ) : (
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 8h16M4 16h16" />
-              </svg>
-            )}
+            {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
         </div>
       </div>
 
       {/* Mobile Menu */}
-      {isOpen && (
-        <div className="md:hidden bg-blue-500 bg-opacity-95 px-4 pb-4 space-y-2">
-          <Link
-            to="/"
-            className="block hover:text-yellow-300 transition-colors"
-            onClick={() => setIsOpen(false)}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div 
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            className="md:hidden bg-white shadow-2xl border-t border-slate-100 overflow-hidden"
           >
-            Home
-          </Link>
-          <Link
-            to="/login"
-            className="block hover:text-yellow-300 transition-colors"
-            onClick={() => setIsOpen(false)}
-          >
-            Student Login
-          </Link>
-          <Link
-            to="/admin-login"
-            className="block hover:text-yellow-300 transition-colors"
-            onClick={() => setIsOpen(false)}
-          >
-            Admin Login
-          </Link>
-        </div>
-      )}
-    </header>
+            <div className="px-6 py-4 space-y-2 flex flex-col">
+              {navLinks.map((link) => {
+                const isActive = location.pathname === link.path;
+                return (
+                  <Link
+                    key={link.name}
+                    to={link.path}
+                    onClick={() => setIsOpen(false)}
+                    className={`flex items-center gap-3 p-4 rounded-2xl font-semibold transition-colors ${isActive ? "bg-indigo-50 text-indigo-600" : "text-slate-600 hover:bg-slate-50"}`}
+                  >
+                    <div className={`p-2 rounded-lg ${isActive ? "bg-indigo-100" : "bg-slate-100"}`}>
+                      {link.icon}
+                    </div>
+                    {link.name}
+                  </Link>
+                )
+              })}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.header>
   );
 };
 
 export default Header;
-
-
-
-
