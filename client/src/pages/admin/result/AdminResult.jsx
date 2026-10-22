@@ -420,8 +420,8 @@ const AdminResultList = () => {
 
       {/* 🎯 RESULT MODAL */}
       {selectedResult && (
-        <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center">
-          <div className="bg-white w-3/4 p-6 rounded-2xl shadow-2xl">
+        <div className="fixed inset-0 z-[100] bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white w-full max-w-3xl max-h-[90vh] overflow-y-auto p-6 rounded-2xl shadow-2xl relative">
             <h3 className="text-xl font-bold mb-4 text-center">
               Result - {selectedResult.student?.user?.name}
             </h3>
@@ -511,8 +511,8 @@ const AdminResultList = () => {
 
       {/* ✏️ EDIT RESULT MODAL */}
       {editResult && (
-        <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center">
-          <div className="bg-white w-3/4 p-6 rounded-2xl shadow-2xl">
+        <div className="fixed inset-0 z-[100] bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white w-full max-w-3xl max-h-[90vh] overflow-y-auto p-6 rounded-2xl shadow-2xl relative">
             <h3 className="text-xl font-bold mb-4 text-center">
               Edit Marks - {editResult.student?.user?.name}
             </h3>

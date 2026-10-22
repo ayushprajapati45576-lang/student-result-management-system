@@ -1,5 +1,5 @@
-import { Menu, LogOut, Bell, ShieldCheck } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { Menu, LogOut, Bell, ShieldCheck, ArrowLeft } from "lucide-react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { authApi, useLogoutMutation, useGetProfileQuery } from "../../features/auth/authApi";
 import { toast } from "react-toastify";
@@ -7,9 +7,11 @@ import { motion } from "framer-motion";
 
 const AdminHeader = ({ setOpen }) => {
   const navigate = useNavigate();
+  const location = useLocation();
   const dispatch = useDispatch();
   const [logout] = useLogoutMutation();
   const { data: admin, isLoading } = useGetProfileQuery();
+  const isNotDashboard = location.pathname !== "/admin/dashboard";
 
   const handleLogout = async () => {
     try {
@@ -30,13 +32,24 @@ const AdminHeader = ({ setOpen }) => {
       animate={{ y: 0, opacity: 1 }}
       className="flex items-center justify-between bg-white/80 backdrop-blur-xl px-6 py-4 shadow-sm border-b border-slate-200 sticky top-0 z-40"
     >
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-3">
         <button 
           onClick={() => setOpen(true)} 
           className="md:hidden p-2 bg-slate-100 rounded-lg text-slate-600 hover:bg-slate-200 transition-colors"
         >
           <Menu className="w-5 h-5" />
         </button>
+
+        {isNotDashboard && (
+          <button
+            onClick={() => navigate(-1)}
+            className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 hover:bg-indigo-50 text-slate-700 hover:text-indigo-600 rounded-lg text-sm font-semibold transition-all border border-slate-200 hover:border-indigo-200 shadow-sm cursor-pointer"
+            title="Go Back"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            <span>Back</span>
+          </button>
+        )}
 
         <div className="hidden md:flex items-center gap-2 px-3 py-1 bg-indigo-50 border border-indigo-100 rounded-full">
           <ShieldCheck className="w-4 h-4 text-indigo-600" />
