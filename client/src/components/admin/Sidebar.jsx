@@ -4,7 +4,6 @@ import { ChevronRight, ChevronsLeft, X } from "lucide-react";
 
 const Sidebar = ({ open, setOpen }) => {
   const [collapsed, setCollapsed] = useState(false);
-  const [classOpen, setClassOpen] = useState(false);
   const [subjectOpen, setSubjectOpen] = useState(false);
   const [studentOpen, setStudentOpen] = useState(false);
   const [resultOpen, setResultOpen] = useState(false); // ✅ NEW
@@ -80,40 +79,6 @@ const Sidebar = ({ open, setOpen }) => {
           >
             📊 {!collapsed && "Dashboard"}
           </NavLink>
-
-          {/* Classes */}
-          <button
-            onClick={() => setClassOpen(!classOpen)}
-            className="menu w-full flex justify-between items-center"
-          >
-            <span>🏫 {!collapsed && "Student Classes"}</span>
-            {!collapsed && (
-              <ChevronRight
-                className={`transition ${
-                  classOpen ? "rotate-90" : ""
-                }`}
-              />
-            )}
-          </button>
-
-          {classOpen && !collapsed && (
-            <div className="ml-6 space-y-1">
-              <NavLink
-                onClick={closeSidebar}
-                to="/admin/classes/add"
-                className="submenu"
-              >
-                ➕ Create Class
-              </NavLink>
-              <NavLink
-                onClick={closeSidebar}
-                to="/admin/classes/manage"
-                className="submenu"
-              >
-                📋 Manage Classes
-              </NavLink>
-            </div>
-          )}
 
           {/* Subjects */}
           <button

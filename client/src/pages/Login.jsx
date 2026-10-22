@@ -1,5 +1,5 @@
-import { useLoginMutation } from "../features/auth/authApi";
-import { useState } from "react";
+import { useLoginMutation, useGetProfileQuery } from "../features/auth/authApi";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { motion } from "framer-motion";
@@ -7,24 +7,38 @@ import { User, Lock, Mail, ArrowRight, GraduationCap } from "lucide-react";
 
 const Login = () => {
   const [login, { isLoading }] = useLoginMutation();
+  const token = localStorage.getItem("token");
+  const { data: profile } = useGetProfileQuery(undefined, {
+    skip: !token || token === "undefined" || token === "null",
+  });
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (profile?.user?.role === "student") {
+      navigate("/student/result", { replace: true });
+    }
+  }, [profile, navigate]);
  
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
       const res = await login({ email, password }).unwrap();
+
+      if (res.user?.role !== "student") {
+        localStorage.removeItem("token");
+        toast.error("Access denied. Please use the Admin Login portal ❌");
+        return;
+      }
+
       if (res.token) {
         localStorage.setItem("token", res.token);
       }
-      if (res.user.role === "student") {
-        toast.success("Student login successful ✅");
-        navigate("/student/result");
-      }
-
+      toast.success("Student login successful ✅");
+      navigate("/student/result");
     } catch (error) {
-      toast.error("Invalid credentials ❌");
+      toast.error(error?.data?.message || error?.error || "Login failed ❌");
     }
   };
 

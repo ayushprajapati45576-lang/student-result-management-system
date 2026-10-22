@@ -1,22 +1,26 @@
 import { Menu, LogOut, Bell, ShieldCheck } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { useLogoutMutation, useGetProfileQuery } from "../../features/auth/authApi";
+import { useDispatch } from "react-redux";
+import { authApi, useLogoutMutation, useGetProfileQuery } from "../../features/auth/authApi";
 import { toast } from "react-toastify";
 import { motion } from "framer-motion";
 
 const AdminHeader = ({ setOpen }) => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [logout] = useLogoutMutation();
   const { data: admin, isLoading } = useGetProfileQuery();
 
   const handleLogout = async () => {
     try {
       await logout().unwrap();
+    } catch {
+      // Clean up client state regardless of server logout status
+    } finally {
       localStorage.removeItem("token");
+      dispatch(authApi.util.resetApiState());
       toast.success("Successfully logged out ✨");
       navigate("/admin-login", { replace: true });
-    } catch (error) {
-      toast.error("Logout failed");
     }
   };
 

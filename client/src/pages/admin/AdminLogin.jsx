@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useLoginMutation } from "../../features/auth/authApi";
+import { useState, useEffect } from "react";
+import { useLoginMutation, useGetProfileQuery } from "../../features/auth/authApi";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { motion } from "framer-motion";
@@ -8,21 +8,38 @@ import { Lock, Mail, ArrowRight } from "lucide-react";
 const AdminLogin = () => {
   const [login, { isLoading }] = useLoginMutation();
   const navigate = useNavigate();
+  const token = localStorage.getItem("token");
+  const { data: profile } = useGetProfileQuery(undefined, {
+    skip: !token || token === "undefined" || token === "null",
+  });
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  useEffect(() => {
+    if (profile?.user?.role === "admin") {
+      navigate("/admin/dashboard", { replace: true });
+    }
+  }, [profile, navigate]);
 
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
       const res = await login({ email, password }).unwrap();
+
+      if (res.user?.role !== "admin") {
+        localStorage.removeItem("token");
+        toast.error("Access denied. Admin credentials required ❌");
+        return;
+      }
+
       if (res.token) {
         localStorage.setItem("token", res.token);
       }
       toast.success("Welcome back to the Dashboard! ✨");
       navigate("/admin/dashboard");
     } catch (error) {
-      toast.error("Invalid credentials ❌");
+      toast.error(error?.data?.message || error?.error || "Login failed ❌");
     }
   };
 

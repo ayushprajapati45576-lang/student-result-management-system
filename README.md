@@ -1,5 +1,13 @@
 # Student Result Management System
 
+## Run locally
+
+1. Start the Express API from the `server` directory with `npm run dev`. It reads `server/.env`; configure `LIVE_URL` to point to a local MongoDB database and set `JWT_SECRET`.
+2. Start the React app from the `client` directory with `npm run dev`.
+3. Open the local URL printed by Vite (normally `http://localhost:5173`). Vite forwards `/api` requests to the local API at `http://localhost:3000`.
+
+Local development uses the local MongoDB database, not the production database. An admin account must exist in that local database to sign in locally; production accounts are not automatically copied over.
+
 ## Deploy to Vercel
 
 Import this repository as a Vercel project and leave the **Root Directory** set to the repository root. The included `vercel.json` builds the React app in `client`, deploys the Express API as a serverless function, and falls back to `index.html` for client-side routes.

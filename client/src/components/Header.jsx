@@ -9,24 +9,39 @@ import { authApi, useGetProfileQuery, useLogoutMutation } from "../features/auth
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [hasToken, setHasToken] = useState(() => Boolean(localStorage.getItem("token")));
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  const getValidToken = () => {
+    const token = localStorage.getItem("token");
+    return token && token !== "undefined" && token !== "null" ? token : null;
+  };
+
+  const [hasToken, setHasToken] = useState(() => Boolean(getValidToken()));
   const [logout, { isLoading: isLoggingOut }] = useLogoutMutation();
-  const { data: profile } = useGetProfileQuery(undefined, { skip: !hasToken });
+  const { data: profile, isError } = useGetProfileQuery(undefined, { skip: !hasToken });
   const isLoggedIn = hasToken && Boolean(profile?.user);
 
   useEffect(() => {
     const syncTokenState = () => {
-      setHasToken(Boolean(localStorage.getItem("token")));
+      setHasToken(Boolean(getValidToken()));
     };
 
     window.addEventListener("storage", syncTokenState);
     syncTokenState();
 
     return () => window.removeEventListener("storage", syncTokenState);
-  }, []);
+  }, [location.pathname]);
+
+  // Clean up invalid or expired token
+  useEffect(() => {
+    if (isError && hasToken) {
+      localStorage.removeItem("token");
+      dispatch(authApi.util.resetApiState());
+      setHasToken(false);
+    }
+  }, [isError, hasToken, dispatch]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -39,21 +54,33 @@ const Header = () => {
   const handleLogout = async () => {
     try {
       await logout().unwrap();
+    } catch {
+      // Clear local auth even if network/server logout fails
+    } finally {
       localStorage.removeItem("token");
       dispatch(authApi.util.resetApiState());
+      setHasToken(false);
       setIsOpen(false);
       toast.success("Successfully logged out ✨");
       navigate("/", { replace: true });
-    } catch {
-      toast.error("Logout failed. Please try again.");
     }
   };
 
-  const navLinks = [
-    { name: "Home", path: "/", icon: <Home className="w-4 h-4" /> },
-    { name: "Student Login", path: "/login", icon: <GraduationCap className="w-4 h-4" /> },
-    { name: "Admin Login", path: "/admin-login", icon: <ShieldCheck className="w-4 h-4" /> }
-  ];
+  const navLinks = isLoggedIn
+    ? profile?.user?.role === "admin"
+      ? [
+          { name: "Home", path: "/", icon: <Home className="w-4 h-4" /> },
+          { name: "Dashboard", path: "/admin/dashboard", icon: <ShieldCheck className="w-4 h-4" /> },
+        ]
+      : [
+          { name: "Home", path: "/", icon: <Home className="w-4 h-4" /> },
+          { name: "My Result", path: "/student/result", icon: <GraduationCap className="w-4 h-4" /> },
+        ]
+    : [
+        { name: "Home", path: "/", icon: <Home className="w-4 h-4" /> },
+        { name: "Student Login", path: "/login", icon: <GraduationCap className="w-4 h-4" /> },
+        { name: "Admin Login", path: "/admin-login", icon: <ShieldCheck className="w-4 h-4" /> },
+      ];
 
   return (
     <motion.header
@@ -75,66 +102,55 @@ const Header = () => {
         </Link>
 
         {/* Desktop Menu */}
-        {isLoggedIn ? (
-          <button
-            onClick={handleLogout}
-            disabled={isLoggingOut}
-            className="hidden md:flex items-center gap-2 bg-rose-50 text-rose-600 hover:bg-rose-600 hover:text-white px-5 py-2 rounded-full transition-all font-semibold text-sm disabled:opacity-60"
-          >
-            <LogOut className="w-4 h-4" />
-            {isLoggingOut ? "Logging out..." : "Logout"}
-          </button>
-        ) : (
-          <nav className="hidden md:flex items-center space-x-2 bg-white/10 backdrop-blur-md border border-slate-200/50 rounded-full px-2 py-1.5 shadow-sm">
-            {navLinks.map((link) => {
-              const isActive = location.pathname === link.path;
-              return (
-                <Link
-                  key={link.name}
-                  to={link.path}
-                  className={`relative flex items-center gap-2 px-5 py-2 rounded-full font-medium text-sm transition-all duration-300 ${isActive ? "text-white" : "text-slate-600 hover:text-indigo-600"}`}
-                >
-                  {isActive && (
-                    <motion.div
-                      layoutId="activeTab"
-                      className="absolute inset-0 bg-indigo-600 rounded-full shadow-md"
-                      transition={{ type: "spring", stiffness: 400, damping: 25 }}
-                    />
-                  )}
-                  <span className="relative z-10 flex items-center gap-2">
-                    {link.icon} {link.name}
-                  </span>
-                </Link>
-              )
-            })}
-          </nav>
-        )}
+        <nav className="hidden md:flex items-center space-x-2 bg-white/10 backdrop-blur-md border border-slate-200/50 rounded-full px-2 py-1.5 shadow-sm">
+          {navLinks.map((link) => {
+            const isActive = location.pathname === link.path;
+            return (
+              <Link
+                key={link.name}
+                to={link.path}
+                className={`relative flex items-center gap-2 px-5 py-2 rounded-full font-medium text-sm transition-all duration-300 ${isActive ? "text-white" : "text-slate-600 hover:text-indigo-600"}`}
+              >
+                {isActive && (
+                  <motion.div
+                    layoutId="activeTab"
+                    className="absolute inset-0 bg-indigo-600 rounded-full shadow-md"
+                    transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                  />
+                )}
+                <span className="relative z-10 flex items-center gap-2">
+                  {link.icon} {link.name}
+                </span>
+              </Link>
+            );
+          })}
 
-        {/* Mobile Hamburger */}
-        <div className="md:hidden">
-          {isLoggedIn ? (
+          {isLoggedIn && (
             <button
               onClick={handleLogout}
               disabled={isLoggingOut}
-              className="flex items-center gap-2 bg-rose-50 text-rose-600 px-4 py-2 rounded-xl font-semibold text-sm disabled:opacity-60"
+              className="flex items-center gap-2 bg-rose-50 text-rose-600 hover:bg-rose-600 hover:text-white px-5 py-2 rounded-full transition-all font-semibold text-sm disabled:opacity-60 ml-1 cursor-pointer"
             >
               <LogOut className="w-4 h-4" />
-              Logout
-            </button>
-          ) : (
-            <button
-              onClick={() => setIsOpen(!isOpen)}
-              className={`p-2 rounded-lg transition-colors ${scrolled ? "bg-slate-100 text-slate-800" : "bg-white/20 text-slate-800 backdrop-blur-md"}`}
-            >
-              {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              {isLoggingOut ? "Logging out..." : "Logout"}
             </button>
           )}
+        </nav>
+
+        {/* Mobile Hamburger */}
+        <div className="md:hidden">
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            className={`p-2 rounded-lg transition-colors ${scrolled ? "bg-slate-100 text-slate-800" : "bg-white/20 text-slate-800 backdrop-blur-md"}`}
+          >
+            {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          </button>
         </div>
       </div>
 
       {/* Mobile Menu */}
       <AnimatePresence>
-        {isOpen && !isLoggedIn && (
+        {isOpen && (
           <motion.div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
@@ -156,8 +172,21 @@ const Header = () => {
                     </div>
                     {link.name}
                   </Link>
-                )
+                );
               })}
+
+              {isLoggedIn && (
+                <button
+                  onClick={handleLogout}
+                  disabled={isLoggingOut}
+                  className="flex items-center gap-3 p-4 rounded-2xl font-semibold text-rose-600 hover:bg-rose-50 transition-colors w-full text-left cursor-pointer"
+                >
+                  <div className="p-2 rounded-lg bg-rose-100">
+                    <LogOut className="w-4 h-4" />
+                  </div>
+                  {isLoggingOut ? "Logging out..." : "Logout"}
+                </button>
+              )}
             </div>
           </motion.div>
         )}

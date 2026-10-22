@@ -67,11 +67,11 @@ class AuthController {
         { expiresIn: "1d" }
       );
 
-      // ✅ COOKIE FIX (Vercel + Mobile safe)
+      const secureCookie = req.secure;
       res.cookie("token", token, {
         httpOnly: true,
-        secure: true,
-        sameSite: "none",
+        secure: secureCookie,
+        sameSite: secureCookie ? "none" : "lax",
         maxAge: 24 * 60 * 60 * 1000
       });
 
@@ -97,10 +97,11 @@ class AuthController {
   // ================= LOGOUT =================
   static logout = (req, res) => {
     try {
+      const secureCookie = req.secure;
       res.clearCookie("token", {
         httpOnly: true,
-        secure: true,
-        sameSite: "none"
+        secure: secureCookie,
+        sameSite: secureCookie ? "none" : "lax"
       });
 
       return res.status(200).json({

@@ -2,8 +2,15 @@ import { Navigate, Outlet } from "react-router-dom";
 import { useGetProfileQuery } from "../features/auth/authApi";
 
 const ProtectedRoute = ({ role }) => {
-  const { data, isLoading } = useGetProfileQuery();
-  console.log(data)
+  const token = localStorage.getItem("token");
+  const hasValidToken = Boolean(token && token !== "undefined" && token !== "null");
+  const { data, isLoading, isError } = useGetProfileQuery(undefined, {
+    skip: !hasValidToken,
+  });
+
+  if (!hasValidToken) {
+    return <Navigate to="/admin-login" replace />;
+  }
 
   if (isLoading) {
     return (
@@ -13,7 +20,8 @@ const ProtectedRoute = ({ role }) => {
     );
   }
 
-  if (!data?.user) {
+  if (isError || !data?.user) {
+    localStorage.removeItem("token");
     return <Navigate to="/admin-login" replace />;
   }
 

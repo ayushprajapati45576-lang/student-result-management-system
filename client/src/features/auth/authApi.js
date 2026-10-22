@@ -9,28 +9,32 @@ export const authApi = createApi({
     credentials: "include", // 👈 COOKIE JWT 
     prepareHeaders: (headers) => {
       const token = localStorage.getItem("token");
-      if (token) {
+      if (token && token !== "undefined" && token !== "null") {
         headers.set("authorization", `Bearer ${token}`);
       }
       return headers;
     },
   }),
+  tagTypes: ["User"],
   endpoints: (builder) => ({
     login: builder.mutation({
       query: (data) => ({
         url: "/login",
         method: "POST",
         body: data
-      })
+      }),
+      invalidatesTags: ["User"]
     }),
     getProfile: builder.query({
-      query: () => "/profile"
+      query: () => "/profile",
+      providesTags: ["User"]
     }),
     logout: builder.mutation({
       query: () => ({
         url: "/logout",
         method: "POST"
-      })
+      }),
+      invalidatesTags: ["User"]
     })
   })
 });

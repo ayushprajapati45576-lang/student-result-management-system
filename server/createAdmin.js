@@ -13,13 +13,13 @@ const createAdmin = async () => {
 
     if (existingAdmin) {
       console.log("Admin already exists! Updating password...");
-      const hashed = await bcrypt.hash("12345", 10);
+      const hashed = await bcrypt.hash("1234", 10);
       existingAdmin.password = hashed;
       existingAdmin.role = "admin";
       await existingAdmin.save();
       console.log("Password updated successfully!");
     } else {
-      const hashed = await bcrypt.hash("12345", 10);
+      const hashed = await bcrypt.hash("1234", 10);
       await UserModel.create({
         name: "Ayush Prajapati",
         email: email,
