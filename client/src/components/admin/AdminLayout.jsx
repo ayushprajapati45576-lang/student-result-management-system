@@ -14,7 +14,7 @@ const AdminLayout = ({ children }) => {
       <Sidebar open={open} setOpen={setOpen} />
 
       {/* Main Content */}
-      <div className="flex flex-col flex-1">
+      <div className="flex flex-col flex-1 min-w-0">
         <AdminHeader setOpen={setOpen} />
 
         <main className="p-4 flex-1">

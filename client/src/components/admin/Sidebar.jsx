@@ -4,9 +4,10 @@ import { ChevronRight, ChevronsLeft, X } from "lucide-react";
 
 const Sidebar = ({ open, setOpen }) => {
   const [collapsed, setCollapsed] = useState(false);
+  const [classOpen, setClassOpen] = useState(false);
   const [subjectOpen, setSubjectOpen] = useState(false);
   const [studentOpen, setStudentOpen] = useState(false);
-  const [resultOpen, setResultOpen] = useState(false); // ✅ NEW
+  const [resultOpen, setResultOpen] = useState(false);
 
   useEffect(() => {
     const handleResize = () => {
@@ -41,8 +42,8 @@ const Sidebar = ({ open, setOpen }) => {
           bg-gradient-to-b from-[#0f172a] to-[#020617] text-white
           transition-all duration-300
           ${open ? "translate-x-0" : "-translate-x-full"} 
-          fixed top-0 left-0 z-50 h-screen
-          md:relative md:translate-x-0
+          fixed top-0 left-0 z-50 h-screen overflow-y-auto
+          md:sticky md:top-0 md:translate-x-0 shrink-0
           ${collapsed ? "w-20" : "w-64"}
         `}
       >
@@ -79,6 +80,40 @@ const Sidebar = ({ open, setOpen }) => {
           >
             📊 {!collapsed && "Dashboard"}
           </NavLink>
+
+          {/* Classes */}
+          <button
+            onClick={() => setClassOpen(!classOpen)}
+            className="menu w-full flex justify-between items-center"
+          >
+            <span>🏫 {!collapsed && "Classes"}</span>
+            {!collapsed && (
+              <ChevronRight
+                className={`transition ${
+                  classOpen ? "rotate-90" : ""
+                }`}
+              />
+            )}
+          </button>
+
+          {classOpen && !collapsed && (
+            <div className="ml-6 space-y-1">
+              <NavLink
+                onClick={closeSidebar}
+                to="/admin/classes/add"
+                className="submenu"
+              >
+                ➕ Add Class
+              </NavLink>
+              <NavLink
+                onClick={closeSidebar}
+                to="/admin/classes/manage"
+                className="submenu"
+              >
+                📋 Manage Classes
+              </NavLink>
+            </div>
+          )}
 
           {/* Subjects */}
           <button
